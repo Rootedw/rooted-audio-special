@@ -579,14 +579,15 @@ function useStored<T>(key: string, initial: T) {
     const initialize = async () => {
       const revision = editRevision.current;
       try {
-        const userId = await loadStorageAccount();
+        const [userId, cloudResult] = await Promise.all([
+          loadStorageAccount(),
+          loadCloudState().then(state => ({ state, available: true }), () => ({ state: {}, available: false })),
+        ]);
         if (!active) return;
         localKey.current = accountStorageKey(userId, key);
         let draft = null;
         try { draft = readDraft<T>(localStorage.getItem(localKey.current)); } catch {}
-        let cloud: Record<string, unknown> = {};
-        let cloudAvailable = true;
-        try { cloud = await loadCloudState(); } catch { cloudAvailable = false; }
+        const { state: cloud, available: cloudAvailable } = cloudResult;
         if (!active) return;
         if (pendingEdit.current) {
           setValue(pendingEdit.current.value);
