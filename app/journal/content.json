@@ -1,5 +1,13 @@
 [
   {
+    "page": 1,
+    "blocks": [
+      "Journaling Workbook",
+      "De Shoraifa Methode",
+      "Rooted Within"
+    ]
+  },
+  {
     "page": 2,
     "blocks": [
       "Dit werkboek is een ruimte om te vertragen, te voelen, te luisteren en terug te keren naar jezelf.",
@@ -182,6 +190,10 @@
     ]
   },
   {
+    "page": 18,
+    "blocks": []
+  },
+  {
     "page": 19,
     "blocks": [
       "DAGELIJKSE CHECK-IN Hoe voel ik mij vandaag?",
@@ -192,6 +204,10 @@
       "Wat wil ik vandaag wel meenemen?",
       "Mijn intentie voor vandaag:"
     ]
+  },
+  {
+    "page": 20,
+    "blocks": []
   },
   {
     "page": 21,
