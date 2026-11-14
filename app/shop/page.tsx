@@ -13,7 +13,7 @@ export default function Page() {
       <p>Interactief Journaling Workbook · De Shoraifa Methode</p>
       <p><s>€32,94</s> <strong>€24,05</strong> · 27% verjaardagskorting</p>
       {specialSalesOpen() ? (
-        <Link href={`/checkout?purchase=${SPECIAL_PRODUCT}&lang=nl`}>Naar de checkout</Link>
+        <Link href={`/checkout?purchase=${SPECIAL_PRODUCT}&coupon=ROOTED27&lang=nl`}>Kies ROOTED AUDIO SPECIAL</Link>
       ) : <p>De verjaardagsactie is gesloten.</p>}
       <p><Link href="/auth/login?lang=nl">Inloggen</Link></p>
     </main>
