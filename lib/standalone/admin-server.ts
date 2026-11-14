@@ -17,7 +17,5 @@ export function createAdminClient() {
 export function mollieConfiguration() {
   return resolveMollieConfiguration({
     MOLLIE_API_KEY: process.env.MOLLIE_API_KEY,
-    MOLLIE_LIVE_API_KEY: process.env.MOLLIE_LIVE_API_KEY,
-    MOLLIE_LIVE_ENABLED: process.env.MOLLIE_LIVE_ENABLED,
   });
 }
