@@ -61,11 +61,11 @@ export default function Journal({ pages, initialAnswers }: {
       </select></label>
       <p>{completedPages} van {pages.length} pagina’s met antwoorden</p>
       <article key={page.page} style={{ background: "#f6eedf", color: "#10251a", padding: "clamp(1rem, 4vw, 2rem)", borderRadius: "1rem", marginBlock: "1rem", lineHeight: 1.65 }}>
-        <h2>{page.blocks[0]}</h2>
+        {page.blocks[0] && !(page.page > 3 && /(?:[?:…]|\.{3})$/.test(page.blocks[0].trim())) && <h2>{page.blocks[0]}</h2>}
         {page.blocks.map((block, position) =>
-          position === 0 ? null : block.trim().endsWith("?") && page.page > 3
+          page.page > 3 && /(?:[?:…]|\.{3})$/.test(block.trim())
             ? field(`page-${page.page}-prompt-${position}`, block)
-            : <p key={position}>{block}</p>
+            : position === 0 ? null : <p key={position}>{block}</p>
         )}
         {page.page > 3 && field(`page-${page.page}-notes`, "Mijn reflectie")}
       </article>
