@@ -39,11 +39,14 @@ export default function Journal({ pages, initialAnswers }: {
   }, [answers]);
 
   const page = pages[index];
+  const completedPages = pages.filter(item =>
+    Object.entries(answers).some(([key, value]) => key.startsWith(`page-${item.page}-`) && value.trim())
+  ).length;
   function field(id: string, label: string) {
     return (
       <label key={id} style={{ display: "grid", gap: ".4rem", marginBlock: "1rem" }}>
         {label}
-        <textarea rows={4} value={answers[id] ?? ""} onChange={(event) => {
+        <textarea style={{ width: "100%", padding: ".75rem", border: "1px solid #b39862", borderRadius: ".5rem", background: "#fffaf0", color: "#10251a" }} rows={4} value={answers[id] ?? ""} onChange={(event) => {
           const value = event.target.value;
           setAnswers((previous) => ({ ...previous, [id]: value }));
         }} />
@@ -56,9 +59,11 @@ export default function Journal({ pages, initialAnswers }: {
       <label>Werkboekpagina <select value={index} onChange={(event) => setIndex(Number(event.target.value))}>
         {pages.map((item, position) => <option key={item.page} value={position}>Pagina {item.page}</option>)}
       </select></label>
-      <article key={page.page}>
+      <p>{completedPages} van {pages.length} pagina’s met antwoorden</p>
+      <article key={page.page} style={{ background: "#f6eedf", color: "#10251a", padding: "clamp(1rem, 4vw, 2rem)", borderRadius: "1rem", marginBlock: "1rem", lineHeight: 1.65 }}>
+        <h2>{page.blocks[0]}</h2>
         {page.blocks.map((block, position) =>
-          block.endsWith("?") && page.page > 3
+          position === 0 ? null : block.trim().endsWith("?") && page.page > 3
             ? field(`page-${page.page}-prompt-${position}`, block)
             : <p key={position}>{block}</p>
         )}
