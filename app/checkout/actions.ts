@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { createAdminClient, mollieConfiguration } from '../../lib/standalone/admin-server';
 import { accountEmailAllowed, registrationMode } from '../../lib/standalone/test-access';
 import { accountLanguage } from '../../lib/standalone/auth-policy';
-import { applyCoupon, ownerCouponEmailAllowed, complimentaryReference } from '../../lib/coupons';
+import { applyCoupon, complimentaryReference } from '../../lib/coupons';
 import { SPECIAL_AMOUNT, SPECIAL_PRODUCT, specialSalesOpen } from "../../lib/special-sales";
 import { PRODUCTS, isProductId } from '../../lib/products';
 import { trustedCheckoutUrl } from '../../lib/checkout-url';
@@ -22,9 +22,10 @@ export async function beginGuestPayment(_: GuestCheckoutResult, form: FormData):
   if (productId !== SPECIAL_PRODUCT || !isProductId(productId) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return fail('Controleer je product en e-mailadres.', 'Please check your product and email address.');
   if (!accountEmailAllowed(email, registrationMode(process.env.ROOTED_REGISTRATION_MODE), process.env.ROOTED_TEST_ALLOWED_EMAILS)) return fail('De verkoop is nog niet geopend. Deze betaling is alleen op uitnodiging beschikbaar.', 'Sales have not opened yet. This payment is available by invitation only.');
   if (!specialSalesOpen()) return fail('De verjaardagsactie is gesloten.', 'The birthday offer is closed.');
+  const couponCode = String(form.get('couponCode') ?? '').trim().toUpperCase();
+  if (couponCode !== 'ROOTED27') return fail('Gebruik ROOTED27 voor de verjaardagsprijs.', 'Use ROOTED27 for the birthday price.');
   const discount = applyCoupon(SPECIAL_AMOUNT, false, '');
   if (discount.error || form.get('expectedAmount') !== discount.amount) return fail('De prijs of kortingscode is veranderd. Ga terug en controleer je keuze.', 'The price or discount code has changed. Go back and review your selection.');
-  if (!ownerCouponEmailAllowed(discount.code, email)) return fail('Deze persoonlijke kortingscode is niet geldig voor dit e-mailadres.', 'This personal discount code is not valid for this email address.');
   const complimentary = discount.amount === '0.00';
   const { apiKey, checkoutAvailable } = mollieConfiguration();
   if (!apiKey?.startsWith('test_')) return fail('Testbetaling is tijdelijk niet beschikbaar.', 'Test payment is temporarily unavailable.');
@@ -39,7 +40,7 @@ export async function beginGuestPayment(_: GuestCheckoutResult, form: FormData):
     if (countError) throw Error('Storage unavailable');
     if ((count || 0) >= 5) return fail('Je hebt meerdere betaalpogingen gestart. Wacht even voordat je opnieuw probeert.', 'You have started several payments. Please wait before trying again.');
     const secret = randomBytes(32).toString('hex');
-    const { error: reserved } = await admin.from('ra_guest_payment_orders').insert({ order_id: orderId, claim_hash: guestClaimHash(secret), email, product_id: productId, amount: discount.amount, currency: 'EUR', language: lang, coupon_code: discount.code });
+    const { error: reserved } = await admin.from('ra_guest_payment_orders').insert({ order_id: orderId, claim_hash: guestClaimHash(secret), email, product_id: productId, amount: discount.amount, currency: 'EUR', language: lang, coupon_code: couponCode });
     if (reserved) throw Error('Order unavailable');
     (await cookies()).set(guestCookieName(orderId), secret, { httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 2592000 });
     if (complimentary) {
@@ -56,7 +57,7 @@ export async function beginGuestPayment(_: GuestCheckoutResult, form: FormData):
       amount: { currency: 'EUR', value: discount.amount }, description: PRODUCTS[productId].name,
       redirectUrl: origin.replace(/\/$/, '') + '/checkout/complete?order=' + orderId,
       webhookUrl: origin.replace(/\/$/, '') + '/api/payments/webhook',
-      metadata: { guestOrderId: orderId, email, productId, couponCode: discount.code },
+      metadata: { guestOrderId: orderId, email, productId, couponCode: couponCode },
     }) });
     const payment = await response.json().catch(() => null) as { id?: string; status?: string; _links?: { checkout?: { href?: string } } } | null;
     paymentId = payment?.id;
