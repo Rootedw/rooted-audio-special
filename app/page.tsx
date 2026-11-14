@@ -1293,13 +1293,13 @@ function Header({
         </span>
       </button>
       <nav className="nav" aria-label={nl ? "Hoofdnavigatie" : "Main navigation"}>
-        <a href="/journal">Journaling Workbook</a>
+        <a href="/journal" className="btn ghost">Journaling Workbook</a>
         <button
           className={view === "library" ? "active" : ""}
           onClick={() => nav("library")}
         >
           <Library size={18} />
-          <span>{t.library}</span>
+          <span>GO BLUEPRINT · Audiobook</span>
         </button>
         <button
           className={view === "space" ? "active" : ""}
