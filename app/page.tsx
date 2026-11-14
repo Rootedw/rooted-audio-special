@@ -1031,7 +1031,7 @@ export default function RootedAudio() {
       </main>
     );
 
-  if (!account || !listenerReady) return <main className="app onboarding"><section className="onboarding-card"><p role="status">{language === "nl" ? "Je luisterplek wordt geladen…" : "Loading your listening space…"}</p><button className="btn ghost" onClick={() => window.location.reload()}>{language === "nl" ? "OPNIEUW LADEN" : "RELOAD"}</button></section></main>;
+  if (!account || (hasAudiobook && !listenerReady)) return <main className="app onboarding"><section className="onboarding-card"><p role="status">{language === "nl" ? "Je luisterplek wordt geladen…" : "Loading your listening space…"}</p><button className="btn ghost" onClick={() => window.location.reload()}>{language === "nl" ? "OPNIEUW LADEN" : "RELOAD"}</button></section></main>;
 
   if (account && !hasAudiobook)
     return (
