@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request, context: { params: Promise<{ trackId: string }> }) {
   const { trackId } = await context.params;
   const track = Object.hasOwn(TRACKS, trackId) ? TRACKS[trackId] : undefined;
-  if (!track) return mediaError(404, 'INVALID_TRACK');
+  if (!track || !/^(foreword|chapter-(0[1-9]|1[0-3]))$/.test(trackId)) return mediaError(404, 'INVALID_TRACK');
   const user = await getChatGPTUser();
   if (!user) return mediaError(401, 'UNAUTHORIZED');
   if (!(await hasEntitlement(user, track.product))) return mediaError(403, 'PRODUCT_ACCESS_REQUIRED');
