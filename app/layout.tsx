@@ -6,11 +6,11 @@ import "./edition.css";
 export const metadata: Metadata = {
   title: "ROOTED AUDIO SPECIAL · by Rooted Within",
   description: "GO BLUEPRINT en het Journaling Workbook van Rooted Within.",
-  manifest: "/manifest.webmanifest?v=20261115",
+  manifest: "/manifest.webmanifest?v=emblem",
   icons: {
-    icon: { url: "/rooted-within-icon-192.png?v=20261115", type: "image/png", sizes: "192x192" },
-    shortcut: "/rooted-within-icon-192.png?v=20261115",
-    apple: "/apple-touch-icon.png?v=20261115",
+    icon: { url: "/special-home-icon.png", type: "image/png", sizes: "180x180" },
+    shortcut: "/special-home-icon.png",
+    apple: { url: "/special-home-icon.png", sizes: "180x180", type: "image/png" },
   },
   appleWebApp: { capable: true, title: "ROOTED AUDIO SPECIAL", statusBarStyle: "black-translucent" },
 };
