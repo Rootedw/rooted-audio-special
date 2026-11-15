@@ -1694,9 +1694,10 @@ function BlueprintView({
           <p>{nl ? <>JE HEBT HET AUDIOBOOK VOLTOOID.<br />GA NU LEVEN WAT JE HEBT GEHOORD.</> : <>YOU FINISHED THE AUDIOBOOK.<br />NOW GO LIVE WHAT YOU HEARD.</>}</p>
         </section>
       )}
-      <section className="panel" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
-        <div style={{ flex: "0 1 150px", marginInline: "auto" }}><WorkbookCover /></div>
-        <div style={{ flex: "1 1 240px" }}>
+      <section className="panel edition-panel">
+        <div className="edition-art edition-art--single"><div><WorkbookCover /></div></div>
+        <div>
+          <p className="edition-label">De Shoraifa Methode · Limited Edition</p>
           <h2>Journaling Workbook</h2>
           <p>{nl ? "Met de reflectievragen en oefeningen van De Shoraifa Methode neem je de tijd om te voelen wat er speelt, je gedachten op papier te zetten en te ontdekken wat je nodig hebt." : "The Shoraifa Method’s reflection prompts and exercises help you slow down, put your thoughts on paper, and notice what you need."}</p>
           <a className="btn" href="/journal">{nl ? "Bekijk het werkboek" : "View the workbook"}</a>
