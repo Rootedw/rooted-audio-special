@@ -15,6 +15,7 @@ export default async function JournalPage() {
   return (
     <main className="edition-page">
       <section className="edition-panel">
+        <div className="edition-brand"><img className="edition-logo" src="/assets/rooted-within-logo.png" alt="Rooted Within" width={1685} height={933} /></div>
         <div className="edition-art edition-art--single"><div><WorkbookCover /></div></div>
         <div>
           <p className="edition-label">Rooted Audio Special · Limited Edition</p>
