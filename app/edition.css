@@ -35,3 +35,12 @@ img[src="/assets/rooted-within-logo.png"] {
 }
 .edition-brand { margin-block-end: 0; }
 .edition-logo, .rooted-account .ra-logo { width: clamp(165px, 25vw, 248px); }
+
+.ra-bundle-covers figure img { aspect-ratio: 2 / 3; object-fit: contain; }
+@media (max-width: 760px) {
+  .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }
+  .topbar .brand { position: static; transform: none; width: 100%; min-width: 0; justify-content: center; }
+  .topbar .nav { position: static; transform: none; width: 100%; display: flex; justify-content: center; align-items: center; gap: .3rem; }
+  .topbar .nav > a { padding: .55rem .65rem; font-size: .65rem; white-space: normal; text-align: center; }
+  .topbar .nav > button { flex: 0 0 auto; }
+}
