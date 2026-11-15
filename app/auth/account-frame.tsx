@@ -23,7 +23,7 @@ export default function AccountFrame({ lang, mode, languageLinks, children }: {
           <p className="ra-story-description">{registering ? (nl ? 'Een eigen plek voor jouw hoofdstukken, inzichten en momenten van herkenning. Helemaal in jouw tempo.' : 'Your own place for chapters, insights and moments of recognition. Entirely at your own pace.') : recovering ? (nl ? 'Je account brengt je terug naar je hoofdstukken, opgeslagen luisterpositie en persoonlijke reflecties.' : 'Your account brings you back to your chapters, saved listening position and personal reflections.') : (nl ? 'Ga verder waar je gebleven was. Bij de woorden die je raakten, de inzichten die bleven en de ruimte voor jezelf.' : 'Continue where you left off. With the words that moved you, the insights that stayed and the space you make for yourself.')}</p>
           <div className="edition-art ra-bundle-covers" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", alignItems: "start" }}>
             <figure style={{ margin: 0, textAlign: "center" }}>
-              <img src="/assets/go-blueprint-cover.jpeg" alt="GO BLUEPRINT · Audiobook" width={1024} height={1536} style={{ display: "block", width: "100%", maxWidth: 180, height: "auto", margin: "0 auto" }} />
+              <img src="/assets/go-blueprint-cover.jpeg" alt="GO BLUEPRINT · Audiobook" fetchPriority="high" loading="eager" width={1024} height={1536} style={{ display: "block", width: "100%", maxWidth: 180, height: "auto", margin: "0 auto" }} />
               <figcaption style={{ marginTop: ".6rem", color: "var(--edition-gold)" }}>GO BLUEPRINT · Audiobook</figcaption>
             </figure>
             <figure style={{ margin: 0, textAlign: "center" }}>
