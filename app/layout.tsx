@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./refinements.css";
+import "./edition.css";
 
 export const metadata: Metadata = {
   title: "ROOTED AUDIO SPECIAL · by Rooted Within",
