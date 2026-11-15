@@ -9,12 +9,12 @@ export default function Page() {
   return (
     <main className="edition-page">
       <section className="edition-panel">
+        <div className="edition-brand"><img className="edition-logo" src="/assets/rooted-within-logo.png" alt="Rooted Within" width={1685} height={933} fetchPriority="high" /></div>
         <div className="edition-art">
           <img src="/assets/go-blueprint-cover.jpeg" alt="Go Blueprint audiobookcover" />
           <div><WorkbookCover /></div>
         </div>
         <div>
-          <img src="/assets/rooted-within-logo.png" alt="Rooted Within" width={76} height={76} style={{ display: "block", objectFit: "contain", marginBottom: "1rem" }} />
           <p className="edition-label">Limited Edition</p>
           <h1>Rooted Audio Special</h1>
           <p>Deze Limited Edition bundelt twee zelfstandige producten van Rooted Within.</p>
