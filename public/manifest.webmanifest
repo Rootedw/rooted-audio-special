@@ -7,8 +7,29 @@
   "background_color": "#06150f",
   "theme_color": "#06150f",
   "icons": [
-    { "src": "/rooted-within-icon-192.png?v=20261115", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/rooted-within-icon-512.png?v=20261115", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/rooted-within-icon-maskable-512.png?v=20261115", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/special-home-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/rooted-within-icon-192.png?v=20261115",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/rooted-within-icon-512.png?v=20261115",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/rooted-within-icon-maskable-512.png?v=20261115",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
