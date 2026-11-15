@@ -26,7 +26,7 @@ export async function reconcileGuestPayment(order: GuestOrder) {
   if (order.payment_id?.startsWith('tr_coupon')) {
     if (!isComplimentaryOrder(order)) throw Error('Complimentary order verification failed');
     await ensurePaidGuestAccount(order);
-    return order;
+    return { ...order, activationDelayed: false };
   }
   const { apiKey, checkoutAvailable } = mollieConfiguration();
   if (!checkoutAvailable || !order.payment_id) throw Error('Payment verification unavailable');
@@ -41,8 +41,15 @@ export async function reconcileGuestPayment(order: GuestOrder) {
   if (error) throw Error('Payment storage unavailable');
   const current = { ...order, status: payment.status, access_allowed: decision === 'grant' && !!written, resume_checkout_url: guestResumeCheckout(payment, order) };
   if (decision === 'revoke' && order.claimed_by) await revokeEntitlementSource(order.claimed_by, order.product_id, 'mollie:' + payment.id);
-  if (current.access_allowed) await ensurePaidGuestAccount(current);
-  return current;
+  if (current.access_allowed) {
+    try {
+      await ensurePaidGuestAccount(current);
+    } catch (error) {
+      console.error('Special activation delivery failed', error instanceof Error ? error.message : 'Unknown error');
+      return { ...current, activationDelayed: true };
+    }
+  }
+  return { ...current, activationDelayed: false };
 }
 export async function ensurePaidGuestAccount(order: GuestOrder) {
   if (!order.access_allowed || order.status !== 'paid') return;
@@ -58,7 +65,7 @@ export async function ensurePaidGuestAccount(order: GuestOrder) {
     redirectTo: (process.env.ROOTED_APP_ORIGIN || 'https://audio.rooted-within.nl') + '/auth/activate',
     data: { language: order.language, paid_activation_pending: true },
   });
-  if (inviteError) throw Error('Activation email unavailable');
+  if (inviteError) throw Error('Activation email unavailable (' + (inviteError.code || inviteError.status || 'unknown') + ')');
   const { error: saved } = await admin.from('ra_guest_payment_orders').update({ invited_at: new Date().toISOString() }).eq('order_id', order.order_id);
   if (saved) throw Error('Activation status unavailable');
 }
