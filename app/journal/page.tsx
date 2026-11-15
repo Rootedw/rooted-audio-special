@@ -13,14 +13,18 @@ export default async function JournalPage() {
   if (!(await hasEntitlement(user, SPECIAL_PRODUCT))) redirect("/shop");
 
   return (
-    <main className="app onboarding">
-      <section className="onboarding-card">
-        <p className="kicker">ROOTED AUDIO SPECIAL</p>
-        <div style={{ marginBlock: "1rem" }}><WorkbookCover /></div>
-        <h1>Journaling Workbook</h1>
-        <p className="onboarding-copy">De Shoraifa Methode · PDF · 31 pagina’s</p>
-        <a className="btn enter-btn" href="/api/workbook/special">Download het werkboek (PDF)</a>
-        <Link className="btn ghost" href="/">Terug naar het audiobook</Link>
+    <main className="edition-page">
+      <section className="edition-panel">
+        <div className="edition-art edition-art--single"><div><WorkbookCover /></div></div>
+        <div>
+          <p className="edition-label">Rooted Audio Special · Limited Edition</p>
+          <h1>Journaling Workbook</h1>
+          <p>De Shoraifa Methode · PDF · 31 pagina’s</p>
+          <div className="edition-actions">
+            <a className="btn" href="/api/workbook/special">Download het werkboek (PDF)</a>
+            <Link className="btn ghost" href="/">Terug naar het audiobook</Link>
+          </div>
+        </div>
       </section>
     </main>
   );
