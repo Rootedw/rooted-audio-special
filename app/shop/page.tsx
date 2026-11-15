@@ -14,12 +14,17 @@ export default function Page() {
           <div><WorkbookCover /></div>
         </div>
         <div>
-          <p className="edition-label">27th Birthday Limited Edition</p>
+          <img src="/assets/rooted-within-logo.png" alt="Rooted Within" width={76} height={76} style={{ display: "block", objectFit: "contain", marginBottom: "1rem" }} />
+          <p className="edition-label">Limited Edition</p>
           <h1>Rooted Audio Special</h1>
-          <p>Luister naar GO BLUEPRINT en neem daarna de tijd voor de reflectievragen en oefeningen uit het Journaling Workbook van De Shoraifa Methode.</p>
+          <p>Deze Limited Edition bundelt twee zelfstandige producten van Rooted Within.</p>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0 0 1.4rem", display: "grid", gap: ".8rem" }}>
+            <li><strong style={{ color: "var(--edition-gold)" }}>GO BLUEPRINT · Audiobook</strong><br />Het voorwoord en 13 hoofdstukken, ingesproken door Shoraifa Maayen.</li>
+            <li><strong style={{ color: "var(--edition-gold)" }}>Journaling Workbook · De Shoraifa Methode</strong><br />Een zelfstandig werkboek met reflectievragen en schrijfoefeningen, als downloadbare PDF.</li>
+          </ul>
           <p className="edition-price"><s>€32,94</s><strong>€24,05</strong></p>
           <div className="edition-actions">
-            {specialSalesOpen() ? <Link className="btn" href={`/checkout?purchase=${SPECIAL_PRODUCT}&coupon=ROOTED27&lang=nl`}>Kies ROOTED AUDIO SPECIAL</Link> : <p>De verjaardagsactie is gesloten.</p>}
+            {specialSalesOpen() ? <Link className="btn" href={`/checkout?purchase=${SPECIAL_PRODUCT}&coupon=ROOTED27&lang=nl`}>Kies ROOTED AUDIO SPECIAL</Link> : <p>De Limited Edition is momenteel niet te bestellen.</p>}
             <Link className="btn ghost" href="/auth/login?lang=nl">Inloggen</Link>
           </div>
         </div>
