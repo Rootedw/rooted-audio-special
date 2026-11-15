@@ -19,3 +19,11 @@
 .edition-actions{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;margin-top:1.2rem}
 .edition-actions .btn{text-align:center;white-space:normal}
 @media(max-width:680px){.edition-panel{grid-template-columns:1fr;gap:1rem}.edition-art{padding:.75rem}.edition-actions .btn{flex:1 1 100%}}
+
+.edition-brand{grid-column:1/-1;display:flex;justify-content:center;margin-block-end:calc(-1 * clamp(.25rem,2vw,1.75rem))}
+.edition-logo,.rooted-account .ra-logo{display:block;width:clamp(145px,23vw,220px);max-width:100%;height:auto;max-height:none;object-fit:contain;filter:drop-shadow(0 0 12px #e6c68438)}
+.rooted-account .ra-logo-link{display:flex;align-items:center;flex-shrink:0;max-width:56%;overflow:visible}
+.rooted-account .ra-masthead{gap:.75rem}
+.topbar .brand img{width:clamp(64px,8vw,100px);height:auto;max-height:64px;object-fit:contain;flex-shrink:0}
+.onboarding .onboarding-logo{width:clamp(150px,25vw,232px);height:auto;max-height:none;object-fit:contain}
+@media(max-width:680px){.edition-brand{margin-block-end:0}.rooted-account .ra-logo{width:clamp(125px,39vw,172px)}}
