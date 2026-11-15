@@ -1,3 +1,4 @@
+import WorkbookCover from "../workbook-cover";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getChatGPTUser } from "../chatgpt-auth";
@@ -15,6 +16,7 @@ export default async function JournalPage() {
     <main className="app onboarding">
       <section className="onboarding-card">
         <p className="kicker">ROOTED AUDIO SPECIAL</p>
+        <div style={{ marginBlock: "1rem" }}><WorkbookCover /></div>
         <h1>Journaling Workbook</h1>
         <p className="onboarding-copy">De Shoraifa Methode · PDF · 31 pagina’s</p>
         <a className="btn enter-btn" href="/api/workbook/special">Download het werkboek (PDF)</a>
