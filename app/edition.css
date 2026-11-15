@@ -37,10 +37,49 @@ img[src="/assets/rooted-within-logo.png"] {
 .edition-logo, .rooted-account .ra-logo { width: clamp(165px, 25vw, 248px); }
 
 .ra-bundle-covers figure img { aspect-ratio: 2 / 3; object-fit: contain; }
-@media (max-width: 760px) {
-  .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }
-  .topbar .brand { position: static; transform: none; width: 100%; min-width: 0; justify-content: center; }
-  .topbar .nav { position: static; transform: none; width: 100%; display: flex; justify-content: center; align-items: center; gap: .3rem; }
-  .topbar .nav > a { padding: .55rem .65rem; font-size: .65rem; white-space: normal; text-align: center; }
-  .topbar .nav > button { flex: 0 0 auto; }
+@media (max-width: 800px) {
+  .topbar {
+    position: relative;
+    inset: auto;
+    height: auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: .55rem;
+    padding: .85rem .45rem .65rem;
+  }
+  .topbar .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    gap: .65rem;
+    padding: 0;
+  }
+  .topbar .brand img { width: 78px; height: auto; }
+  .topbar .brand span { white-space: normal; line-height: 1.35; }
+  .topbar .nav {
+    position: static;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) repeat(3, 44px);
+    align-items: center;
+    gap: .2rem;
+    padding: .4rem 0 0;
+    border-top: 1px solid #e6c68e36;
+  }
+  .topbar .nav > a {
+    display: grid;
+    place-items: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: .35rem .45rem;
+    font-size: .62rem;
+    line-height: 1.25;
+    white-space: normal;
+    text-align: center;
+  }
+  .topbar .nav > button { width: 44px; min-height: 44px; }
 }
