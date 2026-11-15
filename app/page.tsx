@@ -1,5 +1,7 @@
 "use client";
 
+import WorkbookCover from "./workbook-cover";
+
 import { retryListeningRequest } from "../lib/listening-retry";
 import { nextPlaybackTrack, setPlaybackSource, ignorePlaybackPause } from "../lib/playback-transition";
 import { readPurchaseIntent } from "../lib/purchase-intent";
@@ -1692,7 +1694,14 @@ function BlueprintView({
           <p>{nl ? <>JE HEBT HET AUDIOBOOK VOLTOOID.<br />GA NU LEVEN WAT JE HEBT GEHOORD.</> : <>YOU FINISHED THE AUDIOBOOK.<br />NOW GO LIVE WHAT YOU HEARD.</>}</p>
         </section>
       )}
-      <section className="panel"><a className="btn" href="/journal">Journaling Workbook</a></section>
+      <section className="panel" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
+        <div style={{ flex: "0 1 150px", marginInline: "auto" }}><WorkbookCover /></div>
+        <div style={{ flex: "1 1 240px" }}>
+          <h2>Journaling Workbook</h2>
+          <p>{nl ? "Met de reflectievragen en oefeningen van De Shoraifa Methode neem je de tijd om te voelen wat er speelt, je gedachten op papier te zetten en te ontdekken wat je nodig hebt." : "The Shoraifa Method’s reflection prompts and exercises help you slow down, put your thoughts on paper, and notice what you need."}</p>
+          <a className="btn" href="/journal">{nl ? "Bekijk het werkboek" : "View the workbook"}</a>
+        </div>
+      </section>
     </main>
   );
 }
