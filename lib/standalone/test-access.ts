@@ -19,6 +19,7 @@ export function accountEmailAllowed(
   return mode === 'public' || testEmailAllowed(email, configured);
 }
 const publicBrandAssets = new Set([
+  '/special-home-icon.png',
   '/assets/rooted-within-logo.png',
   '/assets/go-blueprint-cover.jpeg',
   '/assets/go-blueprint-deepening.jpeg',
