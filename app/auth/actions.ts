@@ -49,7 +49,7 @@ export async function accountAction(_: AccountResult, form: FormData): Promise<A
       await client.auth.resetPasswordForEmail(email,{redirectTo:callback.toString()});
     } else if (mode === 'activate') {
       const {data,error} = await client.auth.getUser();
-      if (!payFirstEnabled() || error || !data.user?.email_confirmed_at || !accountEmailAllowed(data.user.email,accessMode,process.env.ROOTED_TEST_ALLOWED_EMAILS) || !data.user.user_metadata?.paid_activation_pending) return fail('Open eerst je activatielink.','Open your activation link first.');
+      if (!payFirstEnabled() || error || !data.user?.email_confirmed_at || !accountEmailAllowed(data.user.email,accessMode,process.env.ROOTED_TEST_ALLOWED_EMAILS)) return fail('Open eerst je activatielink.','Open your activation link first.');
       if (!(await claimGuestOrders(data.user.id))) return fail('Er is nog geen bevestigde aankoop voor dit account.','No confirmed purchase is available for this account yet.');
       const changed = await client.auth.updateUser({password,data:{paid_activation_pending:false}});
       if (changed.error) return fail('Activeren lukt nu niet. Probeer opnieuw.','Unable to activate right now. Please try again.');

@@ -14,8 +14,10 @@ export function createAdminClient() {
   return cached;
 }
 
-export function mollieConfiguration() {
+export function mollieConfiguration(mode?: 'test' | 'live') {
   return resolveMollieConfiguration({
     MOLLIE_API_KEY: process.env.MOLLIE_API_KEY,
+    MOLLIE_LIVE_API_KEY: process.env.MOLLIE_LIVE_API_KEY,
+    MOLLIE_LIVE_ENABLED: mode === undefined ? process.env.MOLLIE_LIVE_ENABLED : String(mode === 'live'),
   });
 }

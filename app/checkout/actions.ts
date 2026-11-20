@@ -27,8 +27,7 @@ export async function beginGuestPayment(_: GuestCheckoutResult, form: FormData):
   const discount = applyCoupon(SPECIAL_AMOUNT, false, '');
   if (discount.error || form.get('expectedAmount') !== discount.amount) return fail('De prijs of kortingscode is veranderd. Ga terug en controleer je keuze.', 'The price or discount code has changed. Go back and review your selection.');
   const complimentary = discount.amount === '0.00';
-  const { apiKey, checkoutAvailable } = mollieConfiguration();
-  if (!apiKey?.startsWith('test_')) return fail('Testbetaling is tijdelijk niet beschikbaar.', 'Test payment is temporarily unavailable.');
+  const { apiKey, checkoutAvailable, liveEnabled } = mollieConfiguration();
   const origin = process.env.ROOTED_APP_ORIGIN;
   if ((!complimentary && !checkoutAvailable) || !origin || new URL(origin).protocol !== 'https:') return fail('Betalen is tijdelijk niet beschikbaar.', 'Payment is temporarily unavailable.');
   let checkout = '';
@@ -40,7 +39,7 @@ export async function beginGuestPayment(_: GuestCheckoutResult, form: FormData):
     if (countError) throw Error('Storage unavailable');
     if ((count || 0) >= 5) return fail('Je hebt meerdere betaalpogingen gestart. Wacht even voordat je opnieuw probeert.', 'You have started several payments. Please wait before trying again.');
     const secret = randomBytes(32).toString('hex');
-    const { error: reserved } = await admin.from('ra_guest_payment_orders').insert({ order_id: orderId, claim_hash: guestClaimHash(secret), email, product_id: productId, amount: discount.amount, currency: 'EUR', language: lang, coupon_code: couponCode });
+    const { error: reserved } = await admin.from('ra_guest_payment_orders').insert({ order_id: orderId, claim_hash: guestClaimHash(secret), email, product_id: productId, amount: discount.amount, currency: 'EUR', language: lang, coupon_code: couponCode, payment_mode: liveEnabled ? 'live' : 'test' });
     if (reserved) throw Error('Order unavailable');
     (await cookies()).set(guestCookieName(orderId), secret, { httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 2592000 });
     if (complimentary) {

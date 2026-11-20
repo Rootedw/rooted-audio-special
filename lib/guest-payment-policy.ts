@@ -6,6 +6,7 @@ export type GuestOrder = {
   product_id: string; amount: string; currency: string; status: string;
   access_allowed: boolean; revoked_at: string | null; language: 'nl' | 'en'; invited_at: string | null; claimed_by: string | null;
   coupon_code?: string | null;
+  payment_mode?: 'test' | 'live';
   resume_checkout_url?: string;
 };
 export function payFirstEnabled(value = process.env.ROOTED_PAY_FIRST_ENABLED) { return value === 'true'; }

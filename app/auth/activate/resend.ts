@@ -12,14 +12,14 @@ export async function requestGuestActivation(_: { message: string }, form: FormD
   let reservation: { orderId: string; at: string; previous: string | null } | undefined;
   try {
     const admin = createAdminClient();
-    const { data: order, error } = await admin.from('ra_guest_payment_orders').select('*').eq('email', email).eq('status', 'paid').eq('access_allowed', true).order('created_at', { ascending: false }).limit(1).maybeSingle<GuestOrder>();
+    const { data: order, error } = await admin.from('ra_guest_payment_orders').select('*').eq('email', email).eq('status', 'paid').eq('access_allowed', true).is('revoked_at', null).order('created_at', { ascending: false }).limit(1).maybeSingle<GuestOrder>();
     if (error || !order || (order.invited_at && Date.now() - Date.parse(order.invited_at) < 60000)) return result;
     const since = new Date(Date.now() - 60000).toISOString();
     const at = new Date().toISOString();
     const { data: reserved } = await admin.from('ra_guest_payment_orders').update({ invited_at: at }).eq('order_id', order.order_id).or('invited_at.is.null,invited_at.lt.' + since).select('order_id').maybeSingle();
     if (reserved) {
       reservation = { orderId: order.order_id, at, previous: order.invited_at ?? null };
-      await ensurePaidGuestAccount({ ...order, invited_at: null });
+      await ensurePaidGuestAccount({ ...order, invited_at: null }, true);
     }
   } catch (error) {
     console.error('Special activation resend failed', error instanceof Error ? error.message : 'Unknown error');

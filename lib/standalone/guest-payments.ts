@@ -28,7 +28,7 @@ export async function reconcileGuestPayment(order: GuestOrder) {
     await ensurePaidGuestAccount(order);
     return { ...order, activationDelayed: false };
   }
-  const { apiKey, checkoutAvailable } = mollieConfiguration();
+  const { apiKey, checkoutAvailable } = mollieConfiguration(order.payment_mode ?? 'test');
   if (!checkoutAvailable || !order.payment_id) throw Error('Payment verification unavailable');
   const response = await fetch('https://api.mollie.com/v2/payments/' + encodeURIComponent(order.payment_id), { headers: { Authorization: `Bearer ${apiKey}` }, cache: 'no-store' });
   const payment = await response.json().catch(() => null) as GuestPayment | null;
@@ -51,13 +51,24 @@ export async function reconcileGuestPayment(order: GuestOrder) {
   }
   return { ...current, activationDelayed: false };
 }
-export async function ensurePaidGuestAccount(order: GuestOrder) {
-  if (!order.access_allowed || order.status !== 'paid') return;
+export async function ensurePaidGuestAccount(order: GuestOrder, resend = false) {
+  if (!order.access_allowed || order.status !== 'paid' || order.revoked_at) return;
   const admin = createAdminClient();
   const { data, error } = await admin.rpc('ra_guest_customer', { order_reference: order.order_id });
   if (error) throw Error('Account lookup unavailable');
   const customer = Array.isArray(data) ? data[0] as { user_id: string; confirmed: boolean } | undefined : undefined;
-  if (customer?.confirmed) { await claimGuestOrders(customer.user_id); return; }
+  if (customer?.confirmed) {
+    await claimGuestOrders(customer.user_id);
+    if (resend) {
+      const origin = process.env.ROOTED_APP_ORIGIN;
+      if (!origin || new URL(origin).protocol !== 'https:') throw Error('Account origin unavailable');
+      const { error: recoveryError } = await admin.auth.resetPasswordForEmail(order.email, {
+        redirectTo: new URL('/auth/recovery', origin).toString(),
+      });
+      if (recoveryError) throw Error('Account recovery email unavailable');
+    }
+    return;
+  }
   if (order.invited_at) return;
   // This is the first operation that can create an auth user, strictly AFTER
   // server-side Mollie paid/amount/order verification. Email failures are retried.

@@ -8,13 +8,30 @@ import { reconcileGuestPayment } from "../../../../lib/standalone/guest-payments
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const { apiKey, checkoutAvailable } = mollieConfiguration();
-  if (!checkoutAvailable) return new Response("Unavailable", { status: 503 });
   const form = await request.formData().catch(() => null);
   const paymentId = form?.get("id");
   if (typeof paymentId !== "string" || !/^tr_[A-Za-z0-9]+$/.test(paymentId)) {
     return new Response("Invalid", { status: 400 });
   }
+
+  const admin = createAdminClient();
+  if (payFirstEnabled()) {
+    const { data: guest, error: guestError } = await admin.from('ra_guest_payment_orders')
+      .select('*').eq('payment_id', paymentId).maybeSingle<GuestOrder>();
+    if (guestError) return new Response('Unavailable', { status: 503 });
+    if (guest) {
+      try {
+        await reconcileGuestPayment(guest);
+        return new Response('OK', { status: 200 });
+      } catch {
+        return new Response('Unavailable', { status: 503 });
+      }
+    }
+  }
+
+  // Account-first orders predate live checkout in this standalone app.
+  const { apiKey, checkoutAvailable } = mollieConfiguration('test');
+  if (!checkoutAvailable) return new Response("Unavailable", { status: 503 });
 
   const response = await fetch(`https://api.mollie.com/v2/payments/${encodeURIComponent(paymentId)}`, {
     headers: { Authorization: `Bearer ${apiKey}` },
@@ -22,20 +39,12 @@ export async function POST(request: Request) {
   const payment = await response.json().catch(() => null) as VerifiedPayment | null;
   if (!response.ok || !payment || payment.id !== paymentId) return new Response("Unavailable", { status: 502 });
 
-  const admin = createAdminClient();
   const { data: order, error } = await admin
     .from("ra_payment_orders")
     .select("payment_id,email,user_id,product_id,amount,currency")
     .eq("payment_id", paymentId)
     .maybeSingle<PaymentOrder>();
   if (error) return new Response("Unavailable", { status: 503 });
-  if (!order && payFirstEnabled()) {
-    const {data:guest,error:guestError}=await admin.from('ra_guest_payment_orders').select('*').eq('payment_id',paymentId).maybeSingle<GuestOrder>();
-    if(guestError)return new Response('Unavailable',{status:503});
-    if(!guest)return new Response('Unknown',{status:404});
-    try { await reconcileGuestPayment(guest); return new Response('OK',{status:200}); }
-    catch { return new Response('Unavailable',{status:503}); }
-  }
   if (!order || !isProductId(order.product_id)) return new Response("Unknown", { status: 404 });
   if (!paymentMatchesOrder(payment, order)) return new Response("Mismatch", { status: 409 });
 

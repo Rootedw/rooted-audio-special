@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   if (!isSameOriginMutation(request)) return Response.json({ error: "INVALID_ORIGIN" }, { status: 403 });
   const user = await getChatGPTUser();
   if (!user) return Response.json({ error: "UNAUTHORIZED" }, { status: 401 });
-  const { apiKey, checkoutAvailable } = mollieConfiguration();
+  const { apiKey, checkoutAvailable } = mollieConfiguration('test');
   if (!checkoutAvailable) return Response.json({ error: "PAYMENT_STATUS_UNAVAILABLE" }, { status: 503 });
 
   const body = await request.json().catch(() => null) as { paymentId?: unknown } | null;
