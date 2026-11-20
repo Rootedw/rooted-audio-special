@@ -22,6 +22,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   ArrowLeft,
   BookOpen,
@@ -686,6 +687,7 @@ export default function RootedAudio() {
   );
   const [workbookSection, setWorkbookSection] = useStored("ra-workbook-section", 0);
   const [playerActivated, setPlayerActivated] = useState(false);
+  const [playerOpen, setPlayerOpen] = useState(false);
   const [showIntro, setShowIntro] = useState(false);
   const [ritualSeen, setRitualSeen, ritualSeenReady] = useStored("ra-listening-ritual", false);
   const [ritualTrack, setRitualTrack] = useState<Track | null>(null);
@@ -980,6 +982,7 @@ export default function RootedAudio() {
     }
     setPlayerActivated(true);
     setActive(track);
+    setPlayerOpen(true);
     setView("blueprint");
     window.scrollTo(0, 0);
   }
@@ -1161,7 +1164,7 @@ export default function RootedAudio() {
         <WorkbookView language={language} t={t} nav={nav} answers={answers}
           setAnswers={setAnswers} visited={visited} section={workbookSection}
           setSection={setWorkbookSection} />
-        {active && (playerActivated || (playback[active.id]?.position > 1 && !playback[active.id]?.completed)) && <MiniPlayer language={language} active={active} setActive={selectPlayerTrack}
+        {active && (playerActivated || (playback[active.id]?.position > 1 && !playback[active.id]?.completed)) && <MiniPlayer language={language} active={active} setActive={selectPlayerTrack} open={playerOpen} setOpen={setPlayerOpen}
           reflection={reflections[active.id] || ""}
           setReflection={(value, position) => {
             setReflections({ ...reflections, [active.id]: value });
@@ -1241,7 +1244,7 @@ export default function RootedAudio() {
         <MiniPlayer
           language={language}
           active={active}
-          setActive={selectPlayerTrack}
+          setActive={selectPlayerTrack} open={playerOpen} setOpen={setPlayerOpen}
           reflection={reflections[active.id] || ""}
           setReflection={(value, position) => {
             setReflections({ ...reflections, [active.id]: value });
@@ -1266,6 +1269,7 @@ export default function RootedAudio() {
             setRitualSeen(true);
             setPlayerActivated(true);
             setActive(ritualTrack);
+            setPlayerOpen(true);
             setView("blueprint");
             setRitualTrack(null);
             window.scrollTo(0, 0);
@@ -2604,6 +2608,8 @@ function ListeningRitual({
 }
 
 function MiniPlayer({
+  open,
+  setOpen,
   language,
   active,
   setActive,
@@ -2617,6 +2623,8 @@ function MiniPlayer({
   onPlaybackStart,
   hasDeepening,
 }: {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   language: Lang;
   active: Track;
   setActive: Dispatch<SetStateAction<Track | null>>;
@@ -2632,9 +2640,6 @@ function MiniPlayer({
 }) {
   const nl = language === "nl";
   const audioRef = useRef<HTMLAudioElement>(null);
-  // Keep the listening room closed on entry. The listener opens it deliberately
-  // from the persistent mini-player.
-  const [open, setOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [landed, setLanded] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -3058,9 +3063,9 @@ function MiniPlayer({
           <ChevronRight size={14} />
         </button>
       </div>
-      {open && (
+      {open && createPortal(
         <div className="modal player-modal" onClick={() => setOpen(false)}>
-          <div className="listening-room" onClick={(e) => e.stopPropagation()}>
+          <div className="listening-room" role="dialog" aria-modal="true" aria-label={nl ? "Audiospeler" : "Audio player"} onClick={(e) => e.stopPropagation()}>
             <button
               className="close-player"
               onClick={() => setOpen(false)}
@@ -3348,7 +3353,8 @@ function MiniPlayer({
               </button>
             </section>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </aside>
   );
